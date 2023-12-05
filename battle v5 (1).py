@@ -3,16 +3,16 @@ from random import randint
 
 
 def game():
-    healing_potion = 0
+    player_potion = 0
     player_name = input("Как вас зовут? ")
     player_level = 1000
     player_hp = 50 * player_level
     player_xp = 0
     player_money = 1000
 
-    visit_rock(player_name, player_hp, player_money, player_xp, player_level)
+    visit_rock(player_name, player_hp, player_money, player_xp, player_level, player_potion)
 
-def visit_rock(player_name, player_hp, player_money, player_xp, player_level, ):
+def visit_rock(player_name, player_hp, player_money, player_xp, player_level, player_potion):
     os.system("cls")
     print("_________________________")
     print("1 = начать игру")
@@ -41,11 +41,27 @@ def visit_rock(player_name, player_hp, player_money, player_xp, player_level, ):
                     print(player_name, 'получил', anemy_level, 'опыта')
                     player_money += 15
                     print('у вас', player_money, "монет")
-                    visit_rock(player_name, player_hp, player_money, player_xp, player_level)
+                    pause()
+                    visit_rock(player_name, player_hp, player_money, player_xp, player_level, player_potion)
                     if player_xp % 10 == 0:
                         player_level += player_xp // 10
                         player_xp += anemy_level  % 10
-                        print(player_name, 'получил', plaer_level, 'уровень')
+                        print(player_name, 'получил', player_level, 'уровень')
+                        if player_potion > 0:
+                            print('-----------------------------')
+                            print('использовать зелье лечения?')
+                            pause('1 - да')
+                            pause('2 - нет')
+                            poytion = input("Введите номер ответа и нажмите ENTER ")
+                            if poytion == '1':
+                                player_potion -= 1
+                                player_hp += 10
+                                print(player_name, 'востановил 10 жизней')
+                                pause()
+                            elif poytion == '2':
+                                pause()
+                                visit_rock(player_name, player_hp, player_money, player_xp, player_level, player_potion)
+                        pause()
                         break        
                 anemy_attak = randint(0, 10) * anemy_level
                 player_hp -= anemy_attak
@@ -69,39 +85,31 @@ def visit_rock(player_name, player_hp, player_money, player_xp, player_level, ):
         game()
 #---------------------------------------------------------#        
     elif option == "3":
+        print(player_name, 'приехал в лавку')
+        print("Вот список всех товаров")
+        print('у', player_name, player_money, 'монет')
         while True:
             print('------------------------------------')
-            print("Вот список всех товаров")
             print("0 - уйти")
-            print("1 - Восстановить все хп = 25 монет")
-            print('2 - добавить 1 уровень = 30 монет')
-            print('3 - повысить максимальное количество хп = 50 монет')
-            print('4 - купить зелье лечения = 10 монет')
+            print("1 - повысить 1 уровень за 30")
+            print('2 - купить зелье лечения за 10 монет')
             buy = input("Что будем делать?")
             print('------------------------------------')
             if buy == "0":
-                visit_rock(player_name, player_hp, player_money, player_xp, player_level)
+                visit_rock(player_name, player_hp, player_money, player_xp, player_level, player_potion)
             elif buy == "1":
-                if player_money >= 25 and player_hp < 100:
-                    player_money -= 25
-                    player_hp = 10 * player_level
-                    print("у вас", player_hp, "хп")
-                    print(player_money, "монет")
-            elif buy == '2':
-                if player_money >= 29:
-                    player_money -= 30
+                if player_money >= 9:
+                    player_money -= 10
                     player_level += 1
-                    print('у вас', player_level, 'уровень')
-            elif buy == '3':
-                if player_money >= 49:
-                    player_money -= 50
-                    player_hp = 100 * player_level
-                    print('у вас 100 жизней')
+                    print('у', player_name, player_level, 'уровень')
+                    pause()
             elif buy == '4':
                 if player_money >= 9:
                     player_money -= 10
-                    healing_potion += 1
-                    print('у вас 100 жизней')
+                    player_potion += 1
+                    print(player_name, 'купил зелье лечения')
+                    print('у', player_name, player_potion, 'зелий лечения')
+                    pause()
 #--------------------------------------------------------------------------#                  
     elif option == "4":
         while player_money > 0:
@@ -159,11 +167,14 @@ def visit_rock(player_name, player_hp, player_money, player_xp, player_level, ):
                                     player_money += bet * 2
                                     print(player_money, "монет")
                     elif play == "3":
-                        visit_rock(player_name, player_hp, player_money, player_xp, player_level)
+                        visit_rock(player_name, player_hp, player_money, player_xp, player_level, player_potion)
                     else:
                         print("нету такого числа")       
                 elif play_activ == "2":
-                    visit_rock(player_name, player_hp, player_money, player_xp, player_level)
+                    visit_rock(player_name, player_hp, player_money, player_xp, player_level, player_potion)
 
+
+def pause():
+    input('---нажмите ENTER чтобы продолжить---')
 
 game()
